@@ -33,3 +33,16 @@ CREATE TABLE products (
     FOREIGN KEY (category_id) REFERENCES categories(category_id),
     FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
 );
+
+
+CREATE TABLE stock_entries (
+    entry_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    supplier_id INT NOT NULL,
+    quantity INT NOT NULL,
+    entry_date DATE DEFAULT CURRENT_DATE,
+    user_id INT,
+    FOREIGN KEY (product_id) REFERENCES products(product_id),
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
