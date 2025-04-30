@@ -21,3 +21,15 @@ CREATE TABLE categories (
     category_name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT
 );
+
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    category_id INT,
+    supplier_id INT,
+    quantity_in_stock INT DEFAULT 0,
+    unit_price DECIMAL(10,2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(category_id),
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(supplier_id)
+);
