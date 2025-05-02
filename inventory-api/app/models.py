@@ -94,3 +94,10 @@ class Customer(Base):
     phone = Column(String(20))
     email = Column(String(100))
     address = Column(Text)
+
+class Category(Base):
+    __tablename__ = "categories"
+
+    category_id = Column(Integer, primary_key=True, index=True)
+    category_name = Column(String(100), nullable=False, unique=True)
+    description = Column(Text)

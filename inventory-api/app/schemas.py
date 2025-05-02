@@ -16,3 +16,18 @@ class SupplierOut(SupplierBase):
 
     class Config:
         orm_mode = True
+
+
+class CategoryBase(BaseModel):
+    category_name: str
+    description: Optional[str] = None
+
+class CategoryCreate(CategoryBase):
+    pass
+
+class CategoryOut(CategoryBase):
+    category_id: int
+
+    class Config:
+        orm_mode = True
+

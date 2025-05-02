@@ -96,3 +96,50 @@ def delete_supplier(supplier_id: int, db: Session = Depends(get_db)):
     db.delete(supplier)
     db.commit()
     return {"message": "Supplier deleted successfully"}
+
+
+
+
+# Create a new category
+@router.post("/categories/", response_model=schemas.CategoryOut)
+def create_category(category: schemas.CategoryCreate, db: Session = Depends(get_db)):
+    db_category = models.Category(**category.dict())
+    db.add(db_category)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+# Get all categories
+@router.get("/categories/", response_model=list[schemas.CategoryOut])
+def get_categories(db: Session = Depends(get_db)):
+    return db.query(models.Category).all()
+
+# Get a single category by ID
+@router.get("/categories/{category_id}", response_model=schemas.CategoryOut)
+def get_category(category_id: int, db: Session = Depends(get_db)):
+    category = db.query(models.Category).filter(models.Category.category_id == category_id).first()
+    if category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return category
+
+# Update a category
+@router.put("/categories/{category_id}", response_model=schemas.CategoryOut)
+def update_category(category_id: int, category: schemas.CategoryCreate, db: Session = Depends(get_db)):
+    db_category = db.query(models.Category).filter(models.Category.category_id == category_id).first()
+    if db_category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+    for key, value in category.dict().items():
+        setattr(db_category, key, value)
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+# Delete a category
+@router.delete("/categories/{category_id}")
+def delete_category(category_id: int, db: Session = Depends(get_db)):
+    category = db.query(models.Category).filter(models.Category.category_id == category_id).first()
+    if category is None:
+        raise HTTPException(status_code=404, detail="Category not found")
+    db.delete(category)
+    db.commit()
+    return {"message": "Category deleted successfully"}
