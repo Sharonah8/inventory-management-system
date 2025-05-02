@@ -31,3 +31,18 @@ class CategoryOut(CategoryBase):
     class Config:
         orm_mode = True
 
+
+class UserBase(BaseModel):
+    username: str
+    email: str
+    role: Optional[str] = 'clerk'
+
+class UserCreate(UserBase):
+    password_hash: str  # In real apps, you'd hash this
+
+class UserOut(UserBase):
+    user_id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
