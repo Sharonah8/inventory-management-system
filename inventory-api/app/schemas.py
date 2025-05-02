@@ -18,6 +18,8 @@ class SupplierOut(SupplierBase):
         orm_mode = True
 
 
+
+
 class CategoryBase(BaseModel):
     category_name: str
     description: Optional[str] = None
@@ -32,6 +34,8 @@ class CategoryOut(CategoryBase):
         orm_mode = True
 
 
+
+
 class UserBase(BaseModel):
     username: str
     email: str
@@ -43,6 +47,22 @@ class UserCreate(UserBase):
 class UserOut(UserBase):
     user_id: int
     created_at: datetime
+
+    class Config:
+        orm_mode = True
+
+
+
+# Schema for creating a new customer
+class CustomerCreate(BaseModel):
+    name: str
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    address: Optional[str] = None
+
+# Schema for returning a customer (e.g., from DB)
+class Customer(CustomerCreate):
+    customer_id: int
 
     class Config:
         orm_mode = True
