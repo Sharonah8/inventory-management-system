@@ -236,3 +236,96 @@ def delete_customer(customer_id: int, db: Session = Depends(get_db)):
     db.delete(customer)
     db.commit()
     return {"message": "Customer deleted successfully"}
+
+
+
+# Create a stock entry
+@router.post("/stock_entries/", response_model=StockEntry)
+def create_stock_entry(entry: StockEntryCreate, db: Session = Depends(get_db)):
+    new_entry = models.StockEntry(**entry.dict())
+    db.add(new_entry)
+    db.commit()
+    db.refresh(new_entry)
+    return new_entry
+
+# Get all stock entries
+@router.get("/stock_entries/", response_model=List[StockEntry])
+def get_stock_entries(db: Session = Depends(get_db)):
+    return db.query(models.StockEntry).all()
+
+# Get stock entry by ID
+@router.get("/stock_entries/{entry_id}", response_model=StockEntry)
+def get_stock_entry(entry_id: int, db: Session = Depends(get_db)):
+    entry = db.query(models.StockEntry).filter(models.StockEntry.entry_id == entry_id).first()
+    if not entry:
+        raise HTTPException(status_code=404, detail="Stock entry not found")
+    return entry
+
+# Update stock entry
+@router.put("/stock_entries/{entry_id}", response_model=StockEntry)
+def update_stock_entry(entry_id: int, updated_entry: StockEntryCreate, db: Session = Depends(get_db)):
+    entry = db.query(models.StockEntry).filter(models.StockEntry.entry_id == entry_id).first()
+    if not entry:
+        raise HTTPException(status_code=404, detail="Stock entry not found")
+    for key, value in updated_entry.dict().items():
+        setattr(entry, key, value)
+    db.commit()
+    db.refresh(entry)
+    return entry
+
+# Delete stock entry
+@router.delete("/stock_entries/{entry_id}")
+def delete_stock_entry(entry_id: int, db: Session = Depends(get_db)):
+    entry = db.query(models.StockEntry).filter(models.StockEntry.entry_id == entry_id).first()
+    if not entry:
+        raise HTTPException(status_code=404, detail="Stock entry not found")
+    db.delete(entry)
+    db.commit()
+    return {"message": "Stock entry deleted successfully"}
+
+
+
+
+# Create stock movement
+@router.post("/stock_movements/", response_model=StockMovement)
+def create_stock_movement(movement: StockMovementCreate, db: Session = Depends(get_db)):
+    new_movement = models.StockMovement(**movement.dict())
+    db.add(new_movement)
+    db.commit()
+    db.refresh(new_movement)
+    return new_movement
+
+# Get all stock movements
+@router.get("/stock_movements/", response_model=List[StockMovement])
+def get_stock_movements(db: Session = Depends(get_db)):
+    return db.query(models.StockMovement).all()
+
+# Get single stock movement by ID
+@router.get("/stock_movements/{movement_id}", response_model=StockMovement)
+def get_stock_movement(movement_id: int, db: Session = Depends(get_db)):
+    movement = db.query(models.StockMovement).filter(models.StockMovement.movement_id == movement_id).first()
+    if not movement:
+        raise HTTPException(status_code=404, detail="Stock movement not found")
+    return movement
+
+# Update stock movement
+@router.put("/stock_movements/{movement_id}", response_model=StockMovement)
+def update_stock_movement(movement_id: int, updated_movement: StockMovementCreate, db: Session = Depends(get_db)):
+    movement = db.query(models.StockMovement).filter(models.StockMovement.movement_id == movement_id).first()
+    if not movement:
+        raise HTTPException(status_code=404, detail="Stock movement not found")
+    for key, value in updated_movement.dict().items():
+        setattr(movement, key, value)
+    db.commit()
+    db.refresh(movement)
+    return movement
+
+# Delete stock movement
+@router.delete("/stock_movements/{movement_id}")
+def delete_stock_movement(movement_id: int, db: Session = Depends(get_db)):
+    movement = db.query(models.StockMovement).filter(models.StockMovement.movement_id == movement_id).first()
+    if not movement:
+        raise HTTPException(status_code=404, detail="Stock movement not found")
+    db.delete(movement)
+    db.commit()
+    return {"message": "Stock movement deleted successfully"}

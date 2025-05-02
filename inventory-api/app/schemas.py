@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import date
+from datetime import datetime
 
 class SupplierBase(BaseModel):
     name: str
@@ -63,6 +65,42 @@ class CustomerCreate(BaseModel):
 # Schema for returning a customer (e.g., from DB)
 class Customer(CustomerCreate):
     customer_id: int
+
+    class Config:
+        orm_mode = True
+
+
+
+
+# Schema for creating a new stock entry
+class StockEntryCreate(BaseModel):
+    product_id: int
+    supplier_id: int
+    quantity: int
+    entry_date: Optional[date] = None
+    user_id: Optional[int] = None
+
+# Schema for returning a stock entry
+class StockEntry(StockEntryCreate):
+    entry_id: int
+
+    class Config:
+        orm_mode = True
+
+
+
+class StockMovementBase(BaseModel):
+    product_id: int
+    quantity_change: int
+    movement_type: str  # Should be 'IN' or 'OUT'
+    user_id: Optional[int] = None
+
+class StockMovementCreate(StockMovementBase):
+    pass
+
+class StockMovement(StockMovementBase):
+    movement_id: int
+    movement_date: datetime
 
     class Config:
         orm_mode = True
